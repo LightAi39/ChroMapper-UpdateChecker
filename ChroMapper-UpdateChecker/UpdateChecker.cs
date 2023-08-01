@@ -1,62 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace ChroMapper_UpdateChecker
 {
-    [Plugin("UpdateChecker")]
-    public class UpdateChecker
+    internal class UpdateChecker : MonoBehaviour
     {
-        [Init]
-        private void Init()
+        static UpdateChecker _instance;
+
+        void Start()
         {
-
-        }
-
-        [Exit]
-        private void Exit()
-        {
-
-        }
-
-
-        public static async void CheckForNewReleaseOnGithub(string repoOwner, string repoName, string currentVersionTag)
-        {
-            using (var httpClient = new HttpClient())
+            if (_instance != null && _instance != this)
             {
-                string apiUrl = $"https://api.github.com/repos/{repoOwner}/{repoName}/releases/latest";
+                Destroy(this);
+            }
+            else
+            {
+                _instance = this;
+            }
 
-                HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
+            ObtainManifests();
+        }
 
-                if (response.IsSuccessStatusCode)
+        void ObtainManifests()
+        {
+            foreach (var plugin in PluginLoader.plugins)
+            {
+                try
                 {
-                    string json = await response.Content.ReadAsStringAsync();
-                    dynamic releaseInfo = JsonConvert.DeserializeObject(json);
-
-                    string latestReleaseTag = releaseInfo.tag_name;
-
-                    if (currentVersionTag != latestReleaseTag)
+                    var ass = Assembly.GetAssembly(plugin.pluginInstance.GetType());
+                    string? manifest = ass.GetManifestResourceNames().Where(name => name.Contains("manifest.json")).FirstOrDefault();
+                    if (manifest == null)
                     {
-                        Debug.Log($"A newer release is available for {repoOwner}/{repoName}: {latestReleaseTag}");
-                        // do shit with ui
+                        Debug.Log("Manifest not found in " + plugin.Name);
                     }
                     else
                     {
-                        Debug.Log($"Up to date. No newer releases available for {repoOwner}/{repoName}.");
+                        StreamReader reader = new StreamReader(ass.GetManifestResourceStream(manifest));
+                        string jsonString = reader.ReadToEnd();
+
+                        Debug.Log(jsonString);
                     }
+
                 }
-                else
+                catch
                 {
-                    Debug.Log($"Failed to fetch release information for {repoOwner}/{repoName}. Status Code: {response.StatusCode}");
+                    Debug.Log("Error obtaining manifest in " + plugin.Name);
                 }
             }
-
         }
+
     }
 }
