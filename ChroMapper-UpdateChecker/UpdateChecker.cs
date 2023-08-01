@@ -34,7 +34,7 @@ namespace ChroMapper_UpdateChecker
                 try
                 {
                     var ass = Assembly.GetAssembly(plugin.pluginInstance.GetType());
-                    string? manifest = ass.GetManifestResourceNames().Where(name => name.Contains("manifest.json")).FirstOrDefault();
+                    string manifest = ass.GetManifestResourceNames().Where(name => name.Contains("manifest.json")).FirstOrDefault();
                     if (manifest == null)
                     {
                         Debug.Log("Manifest not found in " + plugin.Name);

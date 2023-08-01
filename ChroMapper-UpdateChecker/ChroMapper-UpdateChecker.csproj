@@ -32,9 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Main">
-      <HintPath>$(ChroMapperDir)\ChroMapper_Data\Managed\Main.dll</HintPath>
-    </Reference>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
+    <!-- Publicize directly when referencing -->
+    <Reference Include="$(ChroMapperDir)\ChroMapper_Data\Managed\Main.dll" Publicize="true" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\dlls\newtonsoft.json 13 0 3\net45\Newtonsoft.Json.dll</HintPath>
