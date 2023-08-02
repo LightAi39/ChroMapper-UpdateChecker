@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 using System.Collections;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
+using UnityEngine.SceneManagement;
 
 namespace ChroMapper_UpdateChecker
 {
@@ -17,46 +20,24 @@ namespace ChroMapper_UpdateChecker
         [Init]
         private void Init()
         {
-            GameObject newGO = new GameObject("UpdateChecker");
-            newGO.AddComponent<UpdateChecker>();
+            SceneManager.sceneLoaded += SceneLoaded;
         }
+
+        private void SceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            if (scene.buildIndex == 1)
+            {
+                GameObject newGO = new GameObject("UpdateChecker");
+                newGO.AddComponent<UpdateChecker>();
+            }
+        }
+
 
         [Exit]
         private void Exit()
         {
         }
 
-        public static async void CheckForNewReleaseOnGithub(string repoOwner, string repoName, string currentVersionTag)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                string apiUrl = $"https://api.github.com/repos/{repoOwner}/{repoName}/releases/latest";
-
-                HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string json = await response.Content.ReadAsStringAsync();
-                    dynamic releaseInfo = JsonConvert.DeserializeObject(json);
-
-                    string latestReleaseTag = releaseInfo.tag_name;
-
-                    if (currentVersionTag != latestReleaseTag)
-                    {
-                        Debug.Log($"A newer release is available for {repoOwner}/{repoName}: {latestReleaseTag}");
-                        // do shit with ui
-                    }
-                    else
-                    {
-                        Debug.Log($"Up to date. No newer releases available for {repoOwner}/{repoName}.");
-                    }
-                }
-                else
-                {
-                    Debug.Log($"Failed to fetch release information for {repoOwner}/{repoName}. Status Code: {response.StatusCode}");
-                }
-            }
-
-        }
+        
     }
 }
