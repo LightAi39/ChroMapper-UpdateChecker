@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using UnityEngine;
-using System.Collections;
-using System.Security.Policy;
-using System.Text.RegularExpressions;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ChroMapper_UpdateChecker
