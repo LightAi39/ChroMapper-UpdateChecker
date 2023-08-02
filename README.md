@@ -1,5 +1,5 @@
 # ChroMapper-UpdateChecker
-This plugin checks when plugins need to be updated and lists them in the song select menu
+This plugin checks when plugins need to be updated and lists them in the song select menu if they are outdated.
 
 Any plugins that need to be updated will be listed in the top right corner with the format `name - [local version] > [latest version]`
 
