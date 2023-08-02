@@ -22,3 +22,5 @@ Simply add a `manifest.json` as an embedded resource to your project and it will
 The `manifest.json` must include every field above. Make sure that `version` is the exact same as your GitHub tag linked to your release, and that the `git` link is a link to the main page of your repository.
 
 The plugin will compare the `version` in the manifest with the tag of the release which is marked as latest on GitHub. If there is a mismatch, the plugin is considered out of date which will be shown to the users.
+
+Also, note that your plugin does NOT need to reference the `.dll` of this plugin! Any `manifest.json` files are automatically found and checked.
