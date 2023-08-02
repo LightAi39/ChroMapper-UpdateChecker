@@ -126,13 +126,13 @@ namespace ChroMapper_UpdateChecker
                 }
                 else
                 {
-                    Debug.Log($"Up to date. No newer releases available for {manifest.Name}.");
+                    Debug.Log($"Up to date. No newer releases available for {manifest.Name} on github.");
                     callback?.Invoke((false, latestReleaseTag));
                 }
             }
             else
             {
-                Debug.LogError($"Failed to fetch release information for {manifest.Name}. Result: {www.result}");
+                Debug.Log($"Failed to fetch release information for {manifest.Name} on github. Response Code: {www.responseCode}");
                 callback?.Invoke((false, ""));
             }
         }
