@@ -19,4 +19,6 @@ Simply add a `manifest.json` as an embedded resource to your project and it will
   "git": "https://github.com/LightAi39/ChroMapper-UpdateChecker"
 }
 ```
-The `manifest.json` must include every field. Make sure that `version` is the exact same as your GitHub tag linked to your release, and that the `git` link is a link to the main page of your repository.
+The `manifest.json` must include every field above. Make sure that `version` is the exact same as your GitHub tag linked to your release, and that the `git` link is a link to the main page of your repository.
+
+The plugin will compare the `version` in the manifest with the tag of the release which is marked as latest on GitHub.
