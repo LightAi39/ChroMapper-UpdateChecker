@@ -1,8 +1,8 @@
 ﻿{
-  "id": "UpdateChecker",
+  "id": "ChroMapper-UpdateChecker",
   "name": "Update Checker",
   "author": "Pink & Light Ai",
-  "version": "0.0.1",
+  "version": "v1.0.0",
   "description": "Checks when plugins need updating",
   "git": "https://github.com/LightAi39/ChroMapper-UpdateChecker"
 }
