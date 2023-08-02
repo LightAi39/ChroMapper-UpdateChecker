@@ -7,7 +7,7 @@ Any plugins that need to be updated will be listed in the top right corner with 
 Drop the files inside the `ChroMapper-UpdateChecker(version).zip` into the `Plugins` folder in your ChroMapper directory. This plugin should work on any ChroMapper version.
 
 ## For plugin developers
-Simply add a `manifest.json` as an embedded resource to your project and it will automatically be read. To create the `manifest.json`, follow the format below:
+Any plugin can use this!  Simply add a `manifest.json` as an embedded resource to your project and it will automatically be read. To create the `manifest.json`, follow the format below:
 
 ```json
 {
