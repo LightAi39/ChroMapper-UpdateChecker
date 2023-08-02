@@ -18,7 +18,7 @@ namespace ChroMapper_UpdateChecker
     {
         static UpdateChecker _instance;
         private List<Manifest> _manifestsToCheck = new();
-        public List<Manifest> OutdatedManifests = new();
+        public List<(Manifest manifest, string newVersion)> OutdatedManifests = new();
 
         private GameObject _OutdatedPluginsUI;
 
@@ -42,11 +42,11 @@ namespace ChroMapper_UpdateChecker
 
             foreach (var manifest in _manifestsToCheck)
             {
-                yield return CheckForNewReleaseOnGithubCoroutine(manifest, (isNewReleaseAvailable) =>
+                yield return CheckForNewReleaseOnGithubCoroutine(manifest, (result) =>
                 {
-                    if (isNewReleaseAvailable)
+                    if (result.Item1)
                     {
-                        OutdatedManifests.Add(manifest);
+                        OutdatedManifests.Add((manifest, result.Item2));
                     }
                 });
             }
@@ -93,7 +93,7 @@ namespace ChroMapper_UpdateChecker
             }
         }
 
-        public static IEnumerator CheckForNewReleaseOnGithubCoroutine(Manifest manifest, Action<bool> callback)
+        public static IEnumerator CheckForNewReleaseOnGithubCoroutine(Manifest manifest, Action<(bool, string)> callback)
         {
             string repoOwner, repoName;
             try
@@ -103,7 +103,7 @@ namespace ChroMapper_UpdateChecker
             catch (Exception ex)
             {
                 Debug.LogError(ex.Message);
-                callback?.Invoke(false);
+                callback?.Invoke((false, ""));
                 yield break;
             }
 
@@ -122,18 +122,18 @@ namespace ChroMapper_UpdateChecker
                 if (manifest.Version.ToString() != latestReleaseTag)
                 {
                     Debug.Log($"A newer release is available for {manifest.Name}: {latestReleaseTag}");
-                    callback?.Invoke(true);
+                    callback?.Invoke((true, latestReleaseTag));
                 }
                 else
                 {
                     Debug.Log($"Up to date. No newer releases available for {manifest.Name}.");
-                    callback?.Invoke(false);
+                    callback?.Invoke((false, latestReleaseTag));
                 }
             }
             else
             {
                 Debug.LogError($"Failed to fetch release information for {manifest.Name}. Result: {www.result}");
-                callback?.Invoke(false);
+                callback?.Invoke((false, ""));
             }
         }
 
@@ -174,7 +174,7 @@ namespace ChroMapper_UpdateChecker
             float y = -27;
             foreach (var item in OutdatedManifests)
             {
-                UIHelper.AddLabel(_OutdatedPluginsUI.transform, "OutdatedPluginsItem", $"{item.Name} - {item.Version}", new Vector2(0, y), null, null, Color.red, 10);
+                UIHelper.AddLabel(_OutdatedPluginsUI.transform, "OutdatedPluginsItem", $"{item.manifest.Name} - {item.manifest.Version} > {item.newVersion}", new Vector2(0, y), null, null, Color.red, 10);
                 y -= 10;
             }
 
